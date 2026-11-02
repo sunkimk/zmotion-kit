@@ -1,13 +1,13 @@
-# zmotion
+# @zmotion/react
 
 [Zmotion](https://zzmotion.vercel.app) 交互动效的 React 版：弹簧动效、手势和多端适配，装上即用，样式已内置。
 
 ```bash
-npm install zmotion
+npm install @zmotion/react
 ```
 
 ```tsx
-import { LikeBurst } from "zmotion";
+import { LikeBurst } from "@zmotion/react";
 
 <LikeBurst color="#FF3B5C" particles={12} />
 ```

@@ -1,15 +1,15 @@
-# zmotion-native
+# @zmotion/react-native
 
 [Zmotion](https://zzmotion.vercel.app) 交互动效的 React Native 版（Reanimated + Gesture Handler），动效参数和网页版一致。需要 React Native 0.76+。
 
 ```bash
-npm install zmotion-native react-native-reanimated react-native-gesture-handler
+npm install @zmotion/react-native react-native-reanimated react-native-gesture-handler
 ```
 
 按 Reanimated、Gesture Handler 的官方说明配置好（babel 插件、GestureHandlerRootView）后：
 
 ```tsx
-import { LikeBurst } from "zmotion-native";
+import { LikeBurst } from "@zmotion/react-native";
 
 <LikeBurst color="#FF3B5C" particles={12} />
 ```

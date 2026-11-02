@@ -1,11 +1,11 @@
 {
-  "name": "zmotion",
+  "name": "@zmotion/react",
   "version": "0.1.0",
   "description": "Zmotion 交互动效的 React 版：弹簧动效、手势和多端适配，装上即用",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sunkimk/zmotion-kit",
+    "url": "git+https://github.com/sunkimk/zmotion-kit.git",
     "directory": "packages/react"
   },
   "homepage": "https://zzmotion.vercel.app",
@@ -40,5 +40,8 @@
   "dependencies": {
     "lucide-react": "^1.64.0",
     "motion": "^14.7.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

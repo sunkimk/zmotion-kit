@@ -4,19 +4,19 @@
 
 | 平台 | 包 | 说明 |
 |---|---|---|
-| React | `npm install zmotion` | motion（Framer Motion）实现，样式已内置；也可以用 shadcn 把源码装进项目 |
+| React | `npm install @zmotion/react` | motion（Framer Motion）实现，样式已内置；也可以用 shadcn 把源码装进项目 |
 | SwiftUI | Swift Package `ZmotionKit`（iOS 17+） | Xcode：File › Add Package Dependencies… 粘贴本仓库地址 |
-| React Native | `npm install zmotion-native react-native-reanimated react-native-gesture-handler` | Reanimated + Gesture Handler 实现 |
+| React Native | `npm install @zmotion/react-native react-native-reanimated react-native-gesture-handler` | Reanimated + Gesture Handler 实现 |
 
 ## 用法
 
 ```tsx
 // React
-import { LikeBurst } from "zmotion";
+import { LikeBurst } from "@zmotion/react";
 <LikeBurst color="#FF3B5C" particles={12} />
 
 // React Native
-import { LikeBurst } from "zmotion-native";
+import { LikeBurst } from "@zmotion/react-native";
 <LikeBurst color="#FF3B5C" particles={12} />
 ```
 
@@ -34,8 +34,8 @@ LikeBurst(color: Color(hex: "#FF3B5C"), particles: 12)
 ```
 Package.swift               Swift Package（ZmotionKit）
 Sources/ZmotionKit/         SwiftUI 组件（每个组件一个文件，Support.swift 是共用工具）
-packages/react/             npm 包 zmotion（src 由 Zmotion 网站的 scripts/sync-kit.mjs 同步，不要手改）
-packages/react-native/      npm 包 zmotion-native
+packages/react/             npm 包 @zmotion/react（src 由 Zmotion 网站的 scripts/sync-kit.mjs 同步，不要手改）
+packages/react-native/      npm 包 @zmotion/react-native
 ```
 
 不是每个组件都已经有三个平台的版本，网站代码页会标出来；没有的可以在网站上「复制给 AI」让 AI 改写。
