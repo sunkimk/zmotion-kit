@@ -1,0 +1,654 @@
+.tab-bar {
+  --bg: #f4f4f7;
+  --card: #fff;
+  --fg: #111;
+  --muted: #8e8e93;
+  --line: rgb(0 0 0 / 0.06);
+  --bar: rgb(255 255 255 / 0.78);
+  --bar-edge: rgb(0 0 0 / 0.06);
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  /* 多端适配：里面的元素按组件自己的宽度做容器查询（600 起 iPad，900 起桌面） */
+  container-type: size;
+}
+.tab-bar[data-theme="dark"] {
+  --bg: #000;
+  --card: #1c1c1e;
+  --fg: #f5f5f7;
+  --muted: #7c7c82;
+  --line: rgb(255 255 255 / 0.07);
+  --bar: rgb(36 36 40 / 0.78);
+  --bar-edge: rgb(255 255 255 / 0.08);
+}
+
+.tab-bar__inner {
+  position: relative;
+  width: min(100%, 430px);
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* 页面 */
+.tab-bar__screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.tab-bar__status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 2px 26px 0 34px;
+  background: linear-gradient(var(--bg) 60%, transparent);
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+}
+.tab-bar__page {
+  position: absolute;
+  inset: 0;
+  padding: 58px 18px 110px;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.tab-bar__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.tab-bar__head h2 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+.tab-bar__head small { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 500; color: var(--muted); }
+.tab-bar__round {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--card);
+}
+
+.tab-bar__hero {
+  display: grid;
+  gap: 6px;
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(140deg, var(--tab), color-mix(in srgb, var(--tab) 55%, #ff9a62));
+  color: #fff;
+}
+.tab-bar__hero span, .tab-bar__hero small { font-size: 13px; opacity: 0.85; }
+.tab-bar__hero strong { font-size: 30px; font-weight: 750; letter-spacing: -0.01em; }
+.tab-bar__progress {
+  height: 6px;
+  margin: 6px 0 2px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.3);
+  overflow: hidden;
+}
+.tab-bar__progress i { display: block; height: 100%; border-radius: 3px; background: #fff; }
+
+.tab-bar__tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tab-bar__tile {
+  display: grid;
+  gap: 2px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--card);
+}
+.tab-bar__tile span { font-size: 22px; margin-bottom: 6px; }
+.tab-bar__tile b { font-size: 15px; }
+.tab-bar__tile small { font-size: 12px; color: var(--muted); }
+
+.tab-bar__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 14px;
+}
+.tab-bar__chips {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0;
+  overflow: hidden;
+}
+.tab-bar__chips span {
+  flex: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 13px;
+  color: var(--muted);
+}
+.tab-bar__chips span.is-on { background: var(--fg); color: var(--bg); }
+.tab-bar__grid {
+  display: flex;
+  gap: 10px;
+}
+.tab-bar__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tab-bar__shot {
+  position: relative;
+  flex: none;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.tab-bar__shot::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, rgb(0 0 0 / 0.22));
+}
+.tab-bar__shot span {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  z-index: 1;
+  display: grid;
+  gap: 1px;
+  color: #fff;
+}
+.tab-bar__shot b { font-size: 14px; font-weight: 650; }
+.tab-bar__shot small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+
+/* 首页：接下来 */
+.tab-bar__section {
+  margin: 20px 4px 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.tab-bar__agenda {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border-radius: 18px;
+  background: var(--card);
+}
+.tab-bar__agenda li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  color: var(--muted);
+}
+.tab-bar__agenda li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 78px;
+  right: 16px;
+  border-top: 1px solid var(--line);
+}
+.tab-bar__agenda time {
+  width: 48px;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--tab);
+  font-variant-numeric: tabular-nums;
+}
+.tab-bar__agenda div { flex: 1; display: grid; gap: 2px; }
+.tab-bar__agenda b { font-size: 15px; color: var(--fg); }
+.tab-bar__agenda small { font-size: 12px; }
+
+/* 我的：会员卡 */
+.tab-bar__vip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #2a2420, #4a3a2c);
+  color: #f6e3c5;
+}
+.tab-bar__vip div { display: grid; gap: 2px; }
+.tab-bar__vip b { font-size: 15px; }
+.tab-bar__vip small { font-size: 12px; opacity: 0.7; }
+.tab-bar__vip span {
+  flex: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #f6e3c5;
+  color: #2a2420;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.tab-bar__chats {
+  margin: 0;
+  padding: 6px 4px;
+  list-style: none;
+  border-radius: 20px;
+  background: var(--card);
+}
+.tab-bar__chats li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+}
+.tab-bar__chats li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 66px;
+  right: 12px;
+  border-top: 1px solid var(--line);
+}
+.tab-bar__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+.tab-bar__chats div {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.tab-bar__chats b { font-size: 15px; }
+.tab-bar__chats small {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tab-bar__chats time { align-self: flex-start; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.tab-bar__unread {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tab);
+}
+
+.tab-bar__profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tab-bar__me {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fed7aa, #fb923c);
+  font-size: 32px;
+}
+.tab-bar__profile div { display: grid; gap: 4px; }
+.tab-bar__profile b { font-size: 19px; }
+.tab-bar__profile small { font-size: 13px; color: var(--muted); }
+.tab-bar__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 18px 0 12px;
+  padding: 14px 0;
+  border-radius: 18px;
+  background: var(--card);
+  text-align: center;
+}
+.tab-bar__stats div { display: grid; gap: 2px; }
+.tab-bar__stats b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.tab-bar__stats small { font-size: 12px; color: var(--muted); }
+.tab-bar__menu {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border-radius: 18px;
+  background: var(--card);
+}
+.tab-bar__menu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  font-size: 15px;
+}
+.tab-bar__menu li span { flex: 1; }
+.tab-bar__menu li em { font-style: normal; font-size: 14px; color: var(--muted); }
+.tab-bar__menu li + li { border-top: 1px solid var(--line); }
+.tab-bar__menu li svg:last-child { color: var(--muted); }
+
+/* 标签栏 */
+.tab-bar__bar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 18px;
+  z-index: 2;
+  display: flex;
+  padding: 6px;
+  border-radius: 28px;
+  background: var(--bar);
+  -webkit-backdrop-filter: blur(18px) saturate(1.8);
+  backdrop-filter: blur(18px) saturate(1.8);
+  box-shadow: inset 0 0 0 0.5px var(--bar-edge), 0 10px 30px rgb(0 0 0 / 0.12);
+}
+.tab-bar__tab {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 56px;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 22px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.tab-bar__bar.is-compact .tab-bar__tab { min-height: 48px; }
+.tab-bar[data-indicator="underline"] .tab-bar__tab,
+.tab-bar[data-indicator="dot"] .tab-bar__tab { padding-bottom: 12px; }
+.tab-bar__tab.is-active { color: var(--tab); }
+.tab-bar__tab:focus-visible { outline: 2px solid color-mix(in srgb, var(--tab) 50%, transparent); outline-offset: -2px; }
+
+.tab-bar__icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+.tab-bar__label {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+}
+.tab-bar__badge {
+  position: absolute;
+  top: -5px;
+  right: -9px;
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: #ff3b30;
+  box-shadow: 0 0 0 2px var(--card);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tab-bar__pill {
+  position: absolute;
+  inset: 0 4px;
+  z-index: 0;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--tab) 14%, transparent);
+}
+.tab-bar__underline {
+  position: absolute;
+  bottom: 4px;
+  left: calc(50% - 11px);
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--tab);
+}
+.tab-bar__dot {
+  position: absolute;
+  bottom: 4px;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tab);
+}
+.tab-bar[data-theme="dark"] .tab-bar__tab.is-active { color: color-mix(in srgb, var(--tab) 72%, #fff); }
+.tab-bar[data-theme="dark"] .tab-bar__pill { background: color-mix(in srgb, var(--tab) 26%, transparent); }
+
+/* 应用名只在桌面侧边栏里出现 */
+.tab-bar__brand { display: none; }
+
+/* ───────── iPad 和桌面共用（组件宽 ≥ 600）：内容铺满整宽、排成网格 ───────── */
+@container (min-width: 600px) {
+  .tab-bar__inner {
+    --side: 0px;
+    width: 100%;
+  }
+
+  /* iPad 状态栏更矮，横贯整块屏幕 */
+  .tab-bar__status {
+    height: 28px;
+    padding: 0 22px 0 26px;
+    background: none;
+    font-size: 13px;
+  }
+
+  /* 内容区让出侧栏的宽度（iPad 没有侧栏，为 0） */
+  .tab-bar__screen {
+    left: var(--side);
+    transition: left 0.4s cubic-bezier(0.33, 0.55, 0.2, 1);
+  }
+
+  /* 有鼠标时悬停给一点反馈（手机版不加） */
+  @media (hover: hover) {
+    .tab-bar__tab:not(.is-active):hover { color: var(--fg); }
+  }
+
+  /* 内容：卡片排成两列网格，标题、搜索、列表这类整行内容横跨两列 */
+  .tab-bar__page {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 14px;
+    padding: 52px 28px 112px;
+    --shot-k: 1.2;
+  }
+  .tab-bar__page > * { margin: 0; }
+  .tab-bar__head,
+  .tab-bar__search,
+  .tab-bar__chips,
+  .tab-bar__grid,
+  .tab-bar__chats,
+  .tab-bar__profile,
+  .tab-bar__next,
+  .tab-bar__menu { grid-column: 1 / -1; }
+  .tab-bar__head { margin-bottom: 4px; }
+  .tab-bar__hero { align-content: center; }
+  .tab-bar__tiles { margin: 0; }
+  .tab-bar__next .tab-bar__section { margin-top: 6px; }
+  .tab-bar__grid { gap: 14px; }
+  .tab-bar__col { gap: 14px; }
+  .tab-bar__vip { align-self: stretch; }
+}
+
+/* ───────── iPad（组件宽 600–899）：标签栏仍在底部，居中悬浮，图标和文字横排 ───────── */
+@container (min-width: 600px) and (max-width: 899.98px) {
+  .tab-bar__bar {
+    left: calc(50% - 240px);
+    right: calc(50% - 240px);
+    bottom: 22px;
+  }
+  .tab-bar__tab {
+    flex-direction: row;
+    gap: 8px;
+    min-height: 50px;
+    padding: 0 6px;
+    border-radius: 22px;
+  }
+  .tab-bar__bar.is-compact .tab-bar__tab { gap: 0; min-height: 48px; }
+  .tab-bar__label {
+    font-size: 13px;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+  /* 角标让开右边的文字 */
+  .tab-bar__badge { right: -7px; }
+}
+
+/* ───────── 桌面（组件宽 ≥ 900）：带文字的侧边栏，顶部应用名，图标和文字横排 ───────── */
+@container (min-width: 900px) {
+  .tab-bar__inner { --side: 220px; }
+  /* 关掉「显示文字」时侧边栏收成图标栏 */
+  .tab-bar[data-compact] .tab-bar__inner { --side: 76px; }
+
+  .tab-bar__status { display: none; }
+
+  .tab-bar__brand {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: var(--side);
+    height: 72px;
+    padding: 0 22px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    transition: width 0.4s cubic-bezier(0.33, 0.55, 0.2, 1), padding 0.4s cubic-bezier(0.33, 0.55, 0.2, 1);
+  }
+  .tab-bar__brand i {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(140deg, var(--tab), color-mix(in srgb, var(--tab) 55%, #ff9a62));
+    color: #fff;
+    font-size: 15px;
+    font-style: normal;
+  }
+  .tab-bar__brand span { transition: opacity 0.2s; }
+  .tab-bar[data-compact] .tab-bar__brand { padding: 0 22px; }
+  .tab-bar[data-compact] .tab-bar__brand span { opacity: 0; }
+
+  /* 竖栏：贴左边整高，标签从上往下排 */
+  .tab-bar__bar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    width: var(--side);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 80px 12px 16px;
+    border-radius: 0;
+    background: var(--card);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset -1px 0 0 var(--line);
+    transition: width 0.4s cubic-bezier(0.33, 0.55, 0.2, 1);
+  }
+  .tab-bar__tab {
+    flex: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+  }
+  .tab-bar__bar.is-compact .tab-bar__tab { justify-content: center; gap: 0; min-height: 44px; padding: 0; }
+  .tab-bar[data-indicator="underline"] .tab-bar__tab,
+  .tab-bar[data-indicator="dot"] .tab-bar__tab { padding-bottom: 0; }
+  .tab-bar__label {
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  /* 胶囊铺满整格；下划线改成贴着栏左边的竖条；圆点挪到图标左侧 */
+  .tab-bar__pill { inset: 0; }
+  .tab-bar__underline {
+    top: calc(50% - 10px);
+    bottom: auto;
+    left: -12px;
+    width: 3px;
+    height: 20px;
+  }
+  .tab-bar__dot {
+    top: calc(50% - 3px);
+    bottom: auto;
+    left: 3px;
+  }
+
+  /* 内容区更宽：三列网格，超宽时居中、两侧留白 */
+  .tab-bar__page {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding: 36px max(40px, calc((100% - 1080px) / 2)) 36px;
+  }
+  .tab-bar__head { margin-bottom: 6px; }
+  /* 首页：专注 / 习惯 / 接下来 三张卡并排；发现页：搜索占一列、分类占两列 */
+  .tab-bar__next { grid-column: auto; }
+  .tab-bar__next .tab-bar__section { margin-top: 0; }
+  .tab-bar__search { grid-column: auto; }
+  .tab-bar__chips { grid-column: span 2; align-self: center; }
+  .tab-bar__menu { grid-column: auto; align-self: start; }
+  /* 我的：数据卡和会员卡跟菜单同一行，被拉高时内容竖向居中 */
+  .tab-bar__stats { align-items: center; }
+  .tab-bar__grid { gap: 16px; }
+  .tab-bar__col { gap: 16px; }
+}

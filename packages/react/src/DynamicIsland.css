@@ -1,0 +1,307 @@
+.dynamic-island {
+  --fg: #1b1530;
+  --muted: rgb(27 21 48 / 0.55);
+  --w1: #ffd6c9;
+  --w2: #e5d4ff;
+  --w3: #c7e3ff;
+  --base: #f6efff;
+  --ring: transparent;
+  --quick: rgb(255 255 255 / 0.5);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--base);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  /* 多端适配：子元素按组件自己的宽度查询断点（600 起是 iPad 布局，桌面沿用） */
+  container-type: size;
+}
+.dynamic-island[data-theme="dark"] {
+  --fg: #fff;
+  --muted: rgb(255 255 255 / 0.6);
+  --w1: #5b2a86;
+  --w2: #1d3b8a;
+  --w3: #b2416b;
+  --base: #0d0b1a;
+  --ring: rgb(255 255 255 / 0.08);
+  --quick: rgb(255 255 255 / 0.14);
+}
+
+/* 壁纸 */
+.dynamic-island__wall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.dynamic-island__wall i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.9;
+}
+.dynamic-island__wall .is-a { width: 70%; height: 45%; left: -15%; top: 8%; background: var(--w1); }
+.dynamic-island__wall .is-b { width: 80%; height: 50%; right: -25%; top: 30%; background: var(--w2); }
+.dynamic-island__wall .is-c { width: 70%; height: 40%; left: 5%; bottom: -10%; background: var(--w3); }
+
+/* 状态栏 */
+.dynamic-island__status {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100%, 430px);
+  height: 59px;
+  margin-left: max(-50%, -215px);
+  padding: 0 24px 0 32px;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 650;
+  pointer-events: none;
+}
+.dynamic-island__sys { display: inline-flex; align-items: center; gap: 5px; }
+
+/* 岛 */
+.dynamic-island__island {
+  position: absolute;
+  top: 11px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 0 1px var(--ring);
+  color: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.dynamic-island__island:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--di) 60%, transparent); }
+.dynamic-island__content {
+  position: absolute;
+  top: 0;
+  box-sizing: border-box;
+}
+
+.dynamic-island__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 12px 0 7px;
+}
+.dynamic-island__art {
+  flex: none;
+  background: conic-gradient(from 210deg, #ff9a62, #ff3d7f, #7b5cff, #3ec5ff, #ff9a62);
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.2);
+}
+.dynamic-island__art.is-sm { width: 25px; height: 25px; border-radius: 7px; }
+.dynamic-island__art.is-lg { width: 58px; height: 58px; border-radius: 14px; }
+
+.dynamic-island__wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 16px;
+}
+.dynamic-island__wave i {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--di);
+  transform-origin: center;
+  animation: dynamic-island-wave 0.9s ease-in-out infinite alternate;
+}
+.dynamic-island__wave.is-paused i { animation-play-state: paused; }
+@keyframes dynamic-island-wave {
+  0% { transform: scaleY(0.25); }
+  100% { transform: scaleY(1); }
+}
+
+/* 来电 */
+.dynamic-island__row.is-call { gap: 12px; padding: 0 15px 0 15px; }
+.dynamic-island__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd1dc, #ff8fab);
+  font-size: 26px;
+}
+.dynamic-island__caller { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.dynamic-island__caller small { font-size: 12px; color: rgb(255 255 255 / 0.55); }
+.dynamic-island__caller b { font-size: 18px; font-weight: 650; }
+.dynamic-island__btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+.dynamic-island__btn.is-decline { background: #ff3b30; }
+.dynamic-island__btn.is-accept { background: #30d158; }
+
+/* 计时 / 通话 */
+.dynamic-island__row.is-clock { padding: 0 16px 0 12px; }
+.dynamic-island__clock-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--di) 25%, transparent);
+  color: var(--di);
+}
+.dynamic-island__row.is-phone .dynamic-island__clock-icon { background: rgb(48 209 88 / 0.22); color: #30d158; }
+.dynamic-island__digits {
+  position: relative;
+  display: inline-grid;
+  justify-items: end;
+  min-width: 3.2em;
+  color: var(--di);
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.dynamic-island__row.is-phone .dynamic-island__digits { color: #30d158; }
+
+/* 展开播放器 */
+.dynamic-island__player {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 20px 22px 16px;
+  box-sizing: border-box;
+}
+.dynamic-island__track { display: flex; align-items: center; gap: 12px; }
+.dynamic-island__meta { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.dynamic-island__meta b { font-size: 16px; font-weight: 650; }
+.dynamic-island__meta small { font-size: 13px; color: rgb(255 255 255 / 0.55); }
+.dynamic-island__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: rgb(255 255 255 / 0.5);
+  font-variant-numeric: tabular-nums;
+}
+.dynamic-island__progress span {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.18);
+  overflow: hidden;
+}
+.dynamic-island__progress i { display: block; height: 100%; border-radius: 3px; background: #fff; }
+.dynamic-island__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+}
+.dynamic-island__controls button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.dynamic-island__controls button > span { display: grid; place-items: center; }
+
+/* 锁屏 */
+.dynamic-island__lock {
+  position: absolute;
+  top: clamp(90px, 20%, 170px);
+  left: 0;
+  right: 0;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  pointer-events: none;
+}
+.dynamic-island__lock small { font-size: 17px; font-weight: 600; color: var(--muted); }
+.dynamic-island__lock strong {
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+/* 锁屏底部：手电筒 / 相机 */
+.dynamic-island__quick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 34px;
+  display: flex;
+  justify-content: space-between;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: 0 46px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.dynamic-island__quick span {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--quick);
+  color: var(--fg);
+}
+.dynamic-island__home {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 134px;
+  height: 5px;
+  margin-left: -67px;
+  border-radius: 3px;
+  background: var(--fg);
+  opacity: 0.85;
+}
+
+/* ---------- iPad（组件宽 ≥ 600，桌面沿用同一套）：像 iPad 横屏锁屏，大号时间靠左；岛不变 ---------- */
+@container (min-width: 600px) {
+  /* 状态栏铺满整宽，时间在最左、信号电量在最右 */
+  .dynamic-island__status {
+    left: 0;
+    width: 100%;
+    margin-left: 0;
+    padding: 0 28px 0 32px;
+  }
+  /* 日期和时间放大、靠左；往下让开展开后的播放器（岛底约 197） */
+  .dynamic-island__lock {
+    top: clamp(210px, 22cqh, 260px);
+    padding-left: clamp(40px, 7cqw, 96px);
+    justify-items: start;
+  }
+  .dynamic-island__lock small { font-size: 22px; padding-left: 0.3em; }
+  .dynamic-island__lock strong { font-size: clamp(112px, 15cqw, 150px); }
+  /* 只留相机，放在右下角 */
+  .dynamic-island__quick {
+    width: 100%;
+    justify-content: flex-end;
+    padding: 0 40px;
+  }
+  .dynamic-island__quick .is-torch { display: none; }
+}

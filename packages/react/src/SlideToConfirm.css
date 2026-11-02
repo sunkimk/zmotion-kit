@@ -1,0 +1,371 @@
+.slide-to-confirm {
+  --bg: #f2f3f5;
+  --sheet: #fff;
+  --fg: #111;
+  --muted: #8a8a8e;
+  --line: rgb(0 0 0 / 0.06);
+  --skeleton: rgb(0 0 0 / 0.06);
+  --knob-fg: #fff;
+  --hint: #9a9aa0;
+  --hint-hi: #1a1a1a;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  /* 多端适配：子元素按组件自己的宽度查询断点（600 iPad / 900 桌面） */
+  container-type: size;
+}
+.slide-to-confirm[data-theme="dark"] {
+  --bg: #0b0b0c;
+  --sheet: #1a1a1d;
+  --fg: #f5f5f7;
+  --muted: #8a8a8e;
+  --line: rgb(255 255 255 / 0.07);
+  --skeleton: rgb(255 255 255 / 0.06);
+  --hint: #6e6e74;
+  --hint-hi: #ffffff;
+}
+
+.slide-to-confirm__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: min(100%, 430px);
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* 背后的订单页 */
+.slide-to-confirm__page {
+  position: absolute;
+  inset: 0;
+  padding: 0 16px;
+}
+.slide-to-confirm__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 2px 12px 0 16px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.slide-to-confirm__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.slide-to-confirm__nav i { width: 22px; }
+.slide-to-confirm__product {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--sheet);
+}
+.slide-to-confirm__thumb {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #e0e7ff, #fbcfe8);
+  font-size: 38px;
+}
+.slide-to-confirm__product > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.slide-to-confirm__product strong { font-size: 16px; color: var(--fg); }
+.slide-to-confirm__product em { font-style: normal; font-weight: 700; color: var(--fg); }
+.slide-to-confirm__skeleton {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--sheet);
+}
+.slide-to-confirm__skeleton i {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--skeleton);
+}
+.slide-to-confirm__skeleton i:nth-child(2) { width: 70%; }
+.slide-to-confirm__skeleton i:nth-child(3) { width: 45%; }
+
+.slide-to-confirm__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgb(0 0 0 / 0.38);
+}
+
+/* 弹层 */
+.slide-to-confirm__sheet {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px 22px;
+  border-radius: 28px 28px 0 0;
+  background: var(--sheet);
+  box-shadow: 0 -10px 40px rgb(0 0 0 / 0.12);
+}
+.slide-to-confirm__grabber {
+  align-self: center;
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+}
+.slide-to-confirm__title {
+  display: grid;
+  justify-items: center;
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.slide-to-confirm__amount {
+  margin: 6px 0 14px;
+  text-align: center;
+  font-size: 44px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.slide-to-confirm__amount small { font-size: 22px; font-weight: 650; }
+
+.slide-to-confirm__rows {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.slide-to-confirm__rows li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 2px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.slide-to-confirm__rows span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+.slide-to-confirm__rows b { font-weight: 600; }
+.slide-to-confirm__rows b.is-off { color: #ef4444; }
+
+/* 滑轨 */
+.slide-to-confirm__slot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 60px;
+}
+.slide-to-confirm__track {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  height: 60px;
+  border-radius: 999px;
+  overflow: hidden;
+  touch-action: none;
+}
+.slide-to-confirm__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stc) 22%, transparent);
+  pointer-events: none;
+}
+.slide-to-confirm__hint {
+  grid-area: 1 / 1;
+  position: relative;
+  padding-left: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: var(--hint);
+  pointer-events: none;
+}
+.slide-to-confirm__hint.is-shimmer {
+  background: linear-gradient(100deg, var(--hint) 0%, var(--hint) 42%, var(--hint-hi) 50%, var(--hint) 58%, var(--hint) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: slide-to-confirm-shimmer 2.4s linear infinite;
+}
+@keyframes slide-to-confirm-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: 0% 0; }
+}
+
+.slide-to-confirm__knob {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--stc);
+  color: var(--knob-fg);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.16), 0 6px 16px color-mix(in srgb, var(--stc) 35%, transparent);
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.slide-to-confirm__knob:active { cursor: grabbing; }
+/* 鼠标悬停（只在有鼠标的设备上由 JS 打开）：外面亮一圈，箭头招手更快 */
+.slide-to-confirm__knob {
+  transition: box-shadow 0.2s ease;
+}
+.slide-to-confirm__knob[data-hover] {
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--stc) 18%, transparent), 0 2px 6px rgb(0 0 0 / 0.16), 0 8px 20px color-mix(in srgb, var(--stc) 40%, transparent);
+}
+.slide-to-confirm__knob[data-hover] .slide-to-confirm__chev svg { animation-duration: 1s; }
+.slide-to-confirm__knob:focus-visible { outline: 3px solid color-mix(in srgb, var(--stc) 45%, transparent); outline-offset: 3px; }
+.slide-to-confirm__chev svg {
+  animation: slide-to-confirm-beckon 1.6s cubic-bezier(0.33, 0.55, 0.2, 1) infinite;
+}
+@keyframes slide-to-confirm-beckon {
+  0%, 55%, 100% { transform: translateX(0); }
+  25% { transform: translateX(3px); }
+}
+.slide-to-confirm__chev,
+.slide-to-confirm__go {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+.slide-to-confirm__spinner,
+.slide-to-confirm__check {
+  grid-area: 1 / 1;
+  width: 28px;
+  height: 28px;
+  overflow: visible;
+}
+.slide-to-confirm__spinner { animation: slide-to-confirm-spin 0.75s linear infinite; }
+.slide-to-confirm__spinner circle {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+.slide-to-confirm__check path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes slide-to-confirm-spin {
+  to { transform: rotate(360deg); }
+}
+
+.slide-to-confirm__ring {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  border-radius: 50%;
+  background: var(--stc);
+  pointer-events: none;
+}
+
+.slide-to-confirm__foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- iPad（组件宽 ≥ 600）：订单页收成居中一栏，支付弹层改成屏幕中间的弹窗 ---------- */
+@container (min-width: 600px) {
+  .slide-to-confirm__inner {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+  /* 状态栏仍然通栏，订单内容收在最大 560 的一栏里 */
+  .slide-to-confirm__page { padding: 0 24px; }
+  .slide-to-confirm__status { padding: 2px 8px 0; }
+  .slide-to-confirm__page > :not(.slide-to-confirm__status) {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .slide-to-confirm__product { margin-top: 16px; padding: 18px; }
+  .slide-to-confirm__skeleton { margin-top: 16px; padding: 20px; }
+
+  .slide-to-confirm__sheet {
+    width: 420px;
+    max-width: 100%;
+    padding: 26px 24px 22px;
+    border-radius: 28px;
+    box-shadow: 0 24px 64px rgb(0 0 0 / 0.18), 0 2px 8px rgb(0 0 0 / 0.06);
+  }
+  /* 居中弹窗不需要下拉把手 */
+  .slide-to-confirm__grabber { display: none; }
+  .slide-to-confirm__title { margin-top: 0; }
+  .slide-to-confirm[data-theme="dark"] .slide-to-confirm__sheet {
+    box-shadow: 0 0 0 1px var(--line), 0 24px 64px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* ---------- 桌面（组件宽 ≥ 900）：没有手机状态栏，一栏更宽、弹窗稍宽、留白更多 ---------- */
+@container (min-width: 900px) {
+  .slide-to-confirm__inner { padding: 40px; }
+  .slide-to-confirm__page { padding: 32px 40px 0; }
+  .slide-to-confirm__status { display: none; }
+  .slide-to-confirm__page > :not(.slide-to-confirm__status) { max-width: 680px; }
+  .slide-to-confirm__nav { height: 52px; font-size: 19px; }
+  .slide-to-confirm__product { margin-top: 20px; padding: 22px; gap: 18px; border-radius: 20px; }
+  .slide-to-confirm__skeleton { margin-top: 20px; padding: 24px; border-radius: 20px; }
+
+  .slide-to-confirm__sheet {
+    width: 440px;
+    padding: 32px 30px 26px;
+    border-radius: 32px;
+  }
+  .slide-to-confirm__amount { margin: 8px 0 20px; font-size: 48px; }
+  .slide-to-confirm__rows { margin-bottom: 24px; }
+  .slide-to-confirm__rows li { padding: 15px 2px; }
+  .slide-to-confirm__foot { margin-top: 18px; }
+}

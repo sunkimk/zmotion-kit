@@ -1,0 +1,460 @@
+.pull-to-refresh {
+  --bg: #f4f4f6;
+  --card: #fff;
+  --fg: #111;
+  --muted: #8a8a8e;
+  --line: rgb(0 0 0 / 0.06);
+  --track: rgb(0 0 0 / 0.08);
+  --rule: rgb(0 0 0 / 0.12);
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  /* 多端适配：里面的元素按组件自己的宽度做容器查询（600 起 iPad，900 起桌面） */
+  container-type: size;
+}
+.pull-to-refresh[data-theme="dark"] {
+  --bg: #000;
+  --card: #1c1c1e;
+  --fg: #f5f5f7;
+  --muted: #8a8a8e;
+  --line: rgb(255 255 255 / 0.06);
+  --track: rgb(255 255 255 / 0.12);
+  --rule: rgb(255 255 255 / 0.14);
+}
+
+.pull-to-refresh__inner {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 430px);
+  height: 100%;
+  margin: 0 auto;
+}
+
+.pull-to-refresh__head {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px 10px;
+  background: var(--bg);
+}
+.pull-to-refresh__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 2px 8px 0 12px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.pull-to-refresh__title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+}
+.pull-to-refresh__head h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.pull-to-refresh__sub {
+  display: grid;
+  margin-top: 3px;
+}
+.pull-to-refresh__sub small {
+  grid-area: 1 / 1;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.pull-to-refresh__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.5px;
+  background: var(--rule);
+}
+.pull-to-refresh__btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--fg);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 0 0 0.5px var(--line);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pull-to-refresh__btn svg { transition: color 0.2s; }
+.pull-to-refresh__btn.is-busy svg {
+  color: var(--ptr);
+  animation: pull-to-refresh-spin 0.8s linear infinite;
+}
+.pull-to-refresh__btn path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pull-to-refresh__viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+.pull-to-refresh__viewport:active { cursor: grabbing; }
+
+.pull-to-refresh__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ptr);
+  pointer-events: none;
+}
+.pull-to-refresh__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+.pull-to-refresh__icon svg { overflow: visible; }
+.pull-to-refresh__label {
+  display: inline-grid;
+  min-width: 6em;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.pull-to-refresh__track {
+  fill: none;
+  stroke: var(--track);
+  stroke-width: 3;
+}
+.pull-to-refresh__arc {
+  fill: none;
+  stroke: var(--ptr);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.pull-to-refresh__spinning {
+  animation: pull-to-refresh-spin 0.7s linear infinite;
+}
+.pull-to-refresh__arrow path {
+  fill: none;
+  stroke: var(--ptr);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pull-to-refresh__ios line {
+  stroke: var(--ptr);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+.pull-to-refresh__ios.is-spinning {
+  animation: pull-to-refresh-spin 0.8s steps(8) infinite;
+}
+.pull-to-refresh__done circle { fill: var(--ptr); }
+.pull-to-refresh__done path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes pull-to-refresh-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pull-to-refresh__list {
+  position: relative;
+  z-index: 1;
+  padding: 4px 12px 24px;
+  background: var(--bg);
+  will-change: transform;
+}
+.pull-to-refresh__row {
+  overflow: hidden;
+}
+.pull-to-refresh__post {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 1px 0 var(--line);
+}
+.pull-to-refresh__post.is-fresh {
+  animation: pull-to-refresh-fresh 2.4s ease-out both;
+}
+@keyframes pull-to-refresh-fresh {
+  0%, 35% {
+    background: color-mix(in srgb, var(--ptr) 9%, var(--card));
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ptr) 55%, transparent);
+  }
+  100% { background: var(--card); box-shadow: inset 0 0 0 1.5px transparent; }
+}
+
+.pull-to-refresh__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+.pull-to-refresh__body {
+  flex: 1;
+  min-width: 0;
+}
+.pull-to-refresh__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pull-to-refresh__meta strong { font-size: 15px; font-weight: 650; }
+.pull-to-refresh__meta time { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.pull-to-refresh__body p {
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.pull-to-refresh__media {
+  position: relative;
+  height: 132px;
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+/* 配图用渐变画出来：晚霞、雪地、逆光、唱片、拼贴 */
+.pull-to-refresh__media[data-kind="sunset"] {
+  background:
+    linear-gradient(to top, rgb(91 33 182 / 0.55), rgb(91 33 182 / 0.55) 24%, transparent 24.5%),
+    radial-gradient(circle at 66% 76%, #fff3c4 0 11%, rgb(255 243 196 / 0.5) 12%, transparent 30%),
+    linear-gradient(180deg, #fb923c, #f472b6 70%, #c084fc);
+}
+.pull-to-refresh__media[data-kind="snow"] {
+  background:
+    radial-gradient(ellipse 70% 40% at 25% 105%, #fff 0 98%, transparent 100%),
+    radial-gradient(ellipse 60% 34% at 85% 110%, #f1f5ff 0 98%, transparent 100%),
+    radial-gradient(circle, #fff 0 2px, transparent 2.4px) 3px 5px / 37px 29px,
+    radial-gradient(circle, rgb(255 255 255 / 0.85) 0 1.4px, transparent 1.8px) 19px 13px / 23px 31px,
+    radial-gradient(circle, rgb(255 255 255 / 0.6) 0 1px, transparent 1.4px) 7px 21px / 17px 19px,
+    linear-gradient(170deg, #93c5fd, #c7d2fe);
+}
+.pull-to-refresh__media[data-kind="film"] {
+  background:
+    radial-gradient(circle at 80% 20%, #fffbe6 0 5%, rgb(253 224 71 / 0.75) 12%, transparent 46%),
+    linear-gradient(to top, rgb(30 27 75 / 0.65), transparent 45%),
+    linear-gradient(200deg, #f59e0b, #db2777 55%, #6d28d9);
+}
+.pull-to-refresh__media[data-kind="vinyl"] {
+  background:
+    radial-gradient(circle at 30% 50%, #f5f3ff 0 4%, #111 4.5% 9%, #1f1f23 9.5% 30%, transparent 30.5%),
+    repeating-radial-gradient(circle at 30% 50%, transparent 0 3px, rgb(255 255 255 / 0.05) 3px 4px),
+    linear-gradient(120deg, #a78bfa, #22d3ee);
+}
+.pull-to-refresh__media[data-kind="tiles"] {
+  background:
+    linear-gradient(#fff9 0 0) 14px 14px / 30% 44% no-repeat,
+    linear-gradient(#fff6 0 0) calc(14px + 30% + 10px) 14px / 30% 44% no-repeat,
+    linear-gradient(#fff4 0 0) 14px calc(14px + 44% + 10px) / calc(60% + 10px) 28% no-repeat,
+    linear-gradient(135deg, #f9a8d4, #fde68a);
+}
+.pull-to-refresh__end {
+  padding: 14px 0 8px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* iPad 通栏状态栏和右侧详情：手机上不显示 */
+.pull-to-refresh__status--wide,
+.pull-to-refresh__detail { display: none; }
+
+/* ───────── iPad（组件宽 ≥ 600）：左边动态列表、右边选中那条的详情 ───────── */
+/* 下拉刷新只发生在左边列表里，阻尼、阈值、指示器、新动态展开和回弹都不变 */
+@container (min-width: 600px) {
+  .pull-to-refresh__inner,
+  .pull-to-refresh__detail {
+    --list: clamp(320px, 44cqw, 360px);
+    --top: 28px;
+  }
+
+  /* 状态栏横贯整块屏幕，更矮；列表顶部那条收起来 */
+  .pull-to-refresh__head .pull-to-refresh__status { display: none; }
+  .pull-to-refresh__status--wide {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    height: var(--top, 28px);
+    padding: 0 22px 0 26px;
+    font-size: 13px;
+  }
+
+  /* 左栏：固定宽度贴左，内容和手机版一样 */
+  .pull-to-refresh__inner {
+    width: var(--list);
+    margin: 0;
+    padding-top: var(--top);
+    box-sizing: border-box;
+  }
+  .pull-to-refresh__head { padding-top: 12px; }
+
+  /* 刷新按钮看着还是 36，点按区域扩到 44 */
+  .pull-to-refresh__btn { position: relative; }
+  .pull-to-refresh__btn::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+  }
+
+  /* 选中态：卡片底下铺一层主题色淡底 + 细描边，切换时淡入淡出
+     （画在 ::after 上并压到内容下面，刚刷新出来的高亮动画不会把它盖掉） */
+  .pull-to-refresh__post {
+    position: relative;
+    isolation: isolate;
+    cursor: pointer;
+  }
+  .pull-to-refresh__post::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: color-mix(in srgb, var(--ptr) 7%, transparent);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ptr) 38%, transparent);
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.33, 0.55, 0.2, 1);
+    pointer-events: none;
+  }
+  .pull-to-refresh__post.is-selected::after { opacity: 1; }
+  .pull-to-refresh__post:focus-visible {
+    outline: 2px solid var(--ptr);
+    outline-offset: 2px;
+  }
+
+  /* 有鼠标时悬停给一点反馈（触屏靠点按后的选中态）；拖着列表时不亮 */
+  @media (hover: hover) {
+    .pull-to-refresh__viewport:not(:active) .pull-to-refresh__post:not(.is-selected):hover::after {
+      opacity: 0.45;
+      box-shadow: none;
+    }
+    .pull-to-refresh__btn:hover { color: var(--ptr); }
+  }
+
+  /* 右栏：详情，和左栏之间一条细分隔线；新旧两条叠在同一格里交叉淡入，不会把对方挤下去 */
+  .pull-to-refresh__detail {
+    display: grid;
+    align-content: start;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--list);
+    right: 0;
+    padding-top: var(--top);
+    box-sizing: border-box;
+    background: var(--card);
+    box-shadow: inset 0.5px 0 0 var(--rule);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .pull-to-refresh__full {
+    grid-area: 1 / 1;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+  }
+  .pull-to-refresh__author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pull-to-refresh__author .pull-to-refresh__avatar {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+  }
+  .pull-to-refresh__author strong {
+    display: block;
+    font-size: 17px;
+    font-weight: 650;
+  }
+  .pull-to-refresh__author time {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .pull-to-refresh__full p {
+    margin: 20px 0 0;
+    font-size: 19px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+  .pull-to-refresh__full .pull-to-refresh__media {
+    height: auto;
+    aspect-ratio: 4 / 3;
+    margin-top: 20px;
+    border-radius: 16px;
+  }
+}
+
+/* ───────── 桌面（组件宽 ≥ 900）：同一套左右两栏，更宽；去掉手机状态栏 ───────── */
+@container (min-width: 900px) {
+  .pull-to-refresh__inner,
+  .pull-to-refresh__detail {
+    --list: 380px;
+    --top: 0px;
+  }
+  .pull-to-refresh__status--wide { display: none; }
+  .pull-to-refresh__head { padding-top: 28px; }
+
+  .pull-to-refresh__full {
+    max-width: 640px;
+    padding: 44px 48px 56px;
+  }
+  .pull-to-refresh__full p {
+    margin-top: 24px;
+    font-size: 21px;
+  }
+  .pull-to-refresh__full .pull-to-refresh__media {
+    aspect-ratio: 16 / 10;
+    margin-top: 24px;
+  }
+}

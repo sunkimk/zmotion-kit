@@ -1,0 +1,274 @@
+.dot-loader {
+  --dl-muted: #8a8a8e;
+  --dl-shadow: rgb(0 0 0 / 0.28);
+  /* 圆点尺寸：参数值，窄容器里自动缩小，保证一排放得下 */
+  --dl-size: min(var(--dl-px), calc((100cqw - 56px) / (var(--dl-n) * 1.8)));
+  --dl-ease-in: cubic-bezier(0.5, 0, 0.2, 1);
+  --dl-spring: cubic-bezier(0.28, 1.3, 0.36, 1);
+  width: 100%;
+  height: 100%;
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dot-loader[data-theme="dark"] {
+  --dl-muted: #8a8a8e;
+  --dl-shadow: rgb(0 0 0 / 0.7);
+}
+
+.dot-loader__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 120px;
+  min-height: calc(var(--dl-size) * var(--dl-k) + 24px);
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: var(--dl-color);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: scale 0.09s ease-out;
+}
+.dot-loader__stage:active { scale: 0.96; }
+.dot-loader__stage:focus-visible {
+  outline: 2px solid var(--dl-color);
+  outline-offset: 2px;
+}
+.dot-loader__stage > * { grid-area: 1 / 1; }
+
+/* ---------- 圆点 ---------- */
+.dot-loader__set {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dl-size) * 0.75);
+}
+.dot-loader__slot {
+  --gx: calc(((var(--dl-n) - 1) / 2 - var(--i)) * var(--dl-size) * 1.75);
+  --gy: 0px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* 回来：等圆章缩回去，再带一点回弹散开 */
+  transition:
+    transform 0.46s var(--dl-spring) 0.16s,
+    opacity 0.12s linear 0.16s;
+}
+.dot-loader__slot > * { grid-area: 1 / 1; }
+.dot-loader__dot {
+  display: block;
+  width: var(--dl-size);
+  height: var(--dl-size);
+  border-radius: 50%;
+  background: var(--dl-color);
+}
+
+/* 波浪：错峰的正弦起伏 */
+[data-variant="wave"] .dot-loader__set { height: calc(var(--dl-size) * 2.6); }
+[data-variant="wave"] .dot-loader__dot {
+  animation: dl-wave calc(1.1s / var(--dl-speed)) ease-in-out infinite;
+  animation-delay: calc((var(--i) * 0.11s - 3.3s) / var(--dl-speed));
+}
+@keyframes dl-wave {
+  0%, 100% { transform: translateY(50%) scale(0.86); opacity: 0.4; }
+  50% { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+/* 脉冲：放大点亮，外圈扩散 */
+[data-variant="pulse"] .dot-loader__set { gap: calc(var(--dl-size) * 0.9); height: calc(var(--dl-size) * 2.8); }
+[data-variant="pulse"] .dot-loader__slot { --gx: calc(((var(--dl-n) - 1) / 2 - var(--i)) * var(--dl-size) * 1.9); }
+[data-variant="pulse"] .dot-loader__dot,
+[data-variant="pulse"] .dot-loader__ring {
+  animation-duration: calc(max(1.2s, var(--dl-n) * 0.15s + 0.5s) / var(--dl-speed));
+  animation-delay: calc((var(--i) * 0.15s - 12s) / var(--dl-speed));
+  animation-iteration-count: infinite;
+}
+[data-variant="pulse"] .dot-loader__dot { animation-name: dl-pulse; animation-timing-function: ease-in-out; }
+.dot-loader__ring {
+  display: block;
+  width: var(--dl-size);
+  height: var(--dl-size);
+  border-radius: 50%;
+  border: 1.5px solid var(--dl-color);
+  box-sizing: border-box;
+  opacity: 0;
+  animation-name: dl-ring;
+  animation-timing-function: ease-out;
+}
+@keyframes dl-pulse {
+  0% { transform: scale(0.55); opacity: 0.3; }
+  30% { transform: scale(1.05); opacity: 1; }
+  70%, 100% { transform: scale(0.55); opacity: 0.3; }
+}
+@keyframes dl-ring {
+  0% { transform: scale(1); opacity: 0; }
+  30% { transform: scale(1); opacity: 0.5; }
+  75%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* 弹跳：上抛减速、下落加速，落地压扁 */
+[data-variant="bounce"] .dot-loader__set { align-items: flex-end; }
+[data-variant="bounce"] .dot-loader__slot {
+  --gy: calc(var(--dl-size) * -1.4);
+  height: calc(var(--dl-size) * 3.8);
+  align-items: end;
+}
+[data-variant="bounce"] .dot-loader__dot,
+[data-variant="bounce"] .dot-loader__shadow {
+  animation-duration: calc(0.64s / var(--dl-speed));
+  animation-delay: calc((var(--i) * 0.12s - 6.4s) / var(--dl-speed));
+  animation-iteration-count: infinite;
+}
+[data-variant="bounce"] .dot-loader__dot {
+  align-self: end;
+  transform-origin: 50% 100%;
+  animation-name: dl-hop, dl-squash;
+  animation-timing-function: linear;
+}
+.dot-loader__shadow {
+  align-self: end;
+  width: var(--dl-size);
+  height: calc(var(--dl-size) * 0.32);
+  margin-bottom: calc(var(--dl-size) * -0.22);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--dl-shadow), transparent);
+  animation-name: dl-shadow;
+}
+@keyframes dl-hop {
+  0% { translate: 0 0; animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1); }
+  50% { translate: 0 -200%; animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0); }
+  100% { translate: 0 0; }
+}
+@keyframes dl-squash {
+  0%, 100% { scale: 1.3 0.72; }
+  14% { scale: 0.92 1.1; }
+  50% { scale: 1 1; }
+  86% { scale: 0.92 1.1; }
+}
+@keyframes dl-shadow {
+  0%, 100% { scale: 1; opacity: 1; animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1); }
+  50% { scale: 0.45; opacity: 0.3; animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0); }
+}
+
+/* 轨道：一串圆点追着转，头大尾小 */
+[data-variant="orbit"] .dot-loader__set {
+  position: relative;
+  display: block;
+  width: calc(var(--dl-size) * 5.2 + 16px);
+  height: calc(var(--dl-size) * 5.2 + 16px);
+}
+[data-variant="orbit"] .dot-loader__slot {
+  --gx: 0px;
+  position: absolute;
+  inset: 0;
+}
+.dot-loader__arm {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  animation: dl-spin calc(1.4s / var(--dl-speed)) cubic-bezier(0.55, 0.08, 0.35, 0.95) infinite;
+  animation-delay: calc((var(--i) * 0.09s - 2.8s) / var(--dl-speed));
+}
+.dot-loader__arm .dot-loader__dot {
+  transform: scale(calc(1 - var(--t) * 0.55));
+  opacity: calc(1 - var(--t) * 0.65);
+}
+@keyframes dl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- 完成：收拢 → 圆章 → 对勾 ---------- */
+.dot-loader__badge {
+  display: grid;
+  place-items: center;
+  width: calc(var(--dl-size) * var(--dl-k));
+  height: calc(var(--dl-size) * var(--dl-k));
+  border-radius: 50%;
+  background: var(--dl-color);
+  color: #fff;
+  box-shadow: 0 10px 28px -10px color-mix(in srgb, var(--dl-color) 80%, transparent);
+  pointer-events: none;
+  transform: scale(calc(1 / var(--dl-k)));
+  opacity: 0;
+  transition:
+    transform 0.26s cubic-bezier(0.4, 0, 0.2, 1) 0.04s,
+    opacity 0.1s linear 0.2s;
+}
+.dot-loader__badge svg {
+  width: 60%;
+  height: 60%;
+  overflow: visible;
+}
+.dot-loader__badge path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.14s ease-in;
+}
+
+[data-done] .dot-loader__slot {
+  transform: translate(var(--gx), var(--gy)) scale(0.7);
+  opacity: 0;
+  transition:
+    transform 0.3s var(--dl-ease-in),
+    opacity 0.1s linear 0.2s;
+}
+[data-variant="orbit"][data-done] .dot-loader__slot { transform: scale(0.1); }
+[data-done] .dot-loader__badge {
+  transform: scale(1);
+  opacity: 1;
+  transition:
+    transform 0.5s var(--dl-spring) 0.2s,
+    opacity 0.06s linear 0.2s;
+}
+[data-done] .dot-loader__badge path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.32s cubic-bezier(0.65, 0, 0.35, 1) 0.34s;
+}
+[data-done] .dot-loader__dot,
+[data-done] .dot-loader__ring,
+[data-done] .dot-loader__shadow,
+[data-done] .dot-loader__arm {
+  animation-play-state: paused;
+}
+
+.dot-loader__caption {
+  display: grid;
+  height: 18px;
+  font-size: 13px;
+  color: var(--dl-muted);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.dot-loader__caption > span {
+  grid-area: 1 / 1;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-loader__dot,
+  .dot-loader__arm,
+  .dot-loader__ring,
+  .dot-loader__shadow {
+    animation-name: dl-fade !important;
+    animation-timing-function: ease-in-out !important;
+    translate: none;
+    scale: none;
+  }
+  @keyframes dl-fade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+}

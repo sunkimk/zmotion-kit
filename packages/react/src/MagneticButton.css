@@ -1,0 +1,111 @@
+.magnetic-button {
+  --mb-field-line: color-mix(in srgb, var(--mb-color) 22%, transparent);
+  --mb-field-fill: color-mix(in srgb, var(--mb-color) 10%, transparent);
+  --mb-shadow: color-mix(in srgb, var(--mb-color) 50%, transparent);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  /* 根字号跟着画布走（cqmin 以外层画布为准），首页和详情里一样，只整体缩放 */
+  font-size: clamp(15px, 4.4cqmin, 19px);
+}
+.magnetic-button[data-theme="dark"] {
+  --mb-field-line: color-mix(in srgb, var(--mb-color) 30%, transparent);
+  --mb-field-fill: color-mix(in srgb, var(--mb-color) 16%, transparent);
+  --mb-shadow: color-mix(in srgb, var(--mb-color) 40%, black);
+}
+
+.magnetic-button__anchor {
+  position: relative;
+  display: inline-grid;
+}
+
+/* 磁场范围：胶囊外扩 radius，正好是「距离按钮边缘 radius」的等值线 */
+.magnetic-button__field {
+  position: absolute;
+  inset: calc(var(--mb-radius) * -1);
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--mb-field-line);
+  background: radial-gradient(closest-side, var(--mb-field-fill), transparent);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.magnetic-button__btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 9.5em;
+  padding: 1em 1.75em;
+  border: 0;
+  border-radius: 999px;
+  background: var(--mb-color);
+  color: var(--mb-text);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 12px 28px -10px var(--mb-shadow);
+}
+.magnetic-button[data-theme="dark"] .magnetic-button__btn {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 0 0 1px rgb(255 255 255 / 0.04),
+    0 12px 28px -10px var(--mb-shadow);
+}
+.magnetic-button__btn:focus-visible {
+  outline: 2px solid var(--mb-color);
+  outline-offset: 4px;
+}
+
+.magnetic-button__shine {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.magnetic-button__ripple {
+  position: absolute;
+  width: 20em;
+  height: 20em;
+  margin: -10em 0 0 -10em;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.5);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.magnetic-button__label {
+  display: inline-grid;
+  place-items: center;
+}
+.magnetic-button__text {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  white-space: nowrap;
+}
+.magnetic-button__arrow {
+  display: inline-flex;
+}
+.magnetic-button__icon {
+  width: 1.1em;
+  height: 1.1em;
+}

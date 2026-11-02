@@ -1,0 +1,545 @@
+.magnify-dock {
+  --md-wall:
+    radial-gradient(60% 70% at 15% 20%, #ffd6e8 0%, transparent 60%),
+    radial-gradient(55% 60% at 85% 25%, #c9dcff 0%, transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, #d9ccff 0%, transparent 65%),
+    linear-gradient(160deg, #eef1fb, #e3e8f7);
+  --md-fg: #111;
+  --md-muted: #6b6f7a;
+  --md-bar: rgb(255 255 255 / 0.5);
+  --md-glass: rgb(255 255 255 / 0.5);
+  --md-glass-line: rgb(255 255 255 / 0.75);
+  --md-glass-shadow: 0 1px 1px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(40 40 90 / 0.3);
+  --md-window: rgb(255 255 255 / 0.94);
+  --md-window-line: rgb(0 0 0 / 0.08);
+  --md-skeleton: rgb(0 0 0 / 0.07);
+  --md-label-bg: rgb(30 30 34 / 0.82);
+  --md-label-fg: #fff;
+  --md-dot: #2a2a2e;
+  --md-tint: #007aff;
+  --md-page: #fbfbfd;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  container: md / size;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  background: var(--md-wall);
+  color: var(--md-fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.magnify-dock[data-theme="dark"] {
+  --md-wall:
+    radial-gradient(60% 70% at 15% 20%, #4a1f5c 0%, transparent 60%),
+    radial-gradient(55% 60% at 85% 25%, #16306b 0%, transparent 60%),
+    radial-gradient(70% 70% at 60% 95%, #2b1f63 0%, transparent 65%),
+    linear-gradient(160deg, #0f1020, #0a0b14);
+  --md-fg: #f2f2f5;
+  --md-muted: #9a9cab;
+  --md-bar: rgb(20 20 28 / 0.55);
+  --md-glass: rgb(44 44 58 / 0.55);
+  --md-glass-line: rgb(255 255 255 / 0.14);
+  --md-glass-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 12px 32px -10px rgb(0 0 0 / 0.6);
+  --md-window: rgb(36 36 46 / 0.96);
+  --md-window-line: rgb(255 255 255 / 0.1);
+  --md-skeleton: rgb(255 255 255 / 0.08);
+  --md-label-bg: rgb(240 240 245 / 0.92);
+  --md-label-fg: #111;
+  --md-dot: #f2f2f5;
+  --md-tint: #0a84ff;
+  --md-page: #1e1e26;
+}
+
+/* 顶部菜单栏 */
+.magnify-dock__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 26px;
+  padding: 0 14px;
+  font-size: 12px;
+  background: var(--md-bar);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.magnify-dock__bar-app { font-weight: 700; }
+.magnify-dock__bar-time { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+/* 桌面 + 窗口 */
+.magnify-dock__desk {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px 16px;
+}
+.magnify-dock__window {
+  width: min(86%, 440px);
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--md-window);
+  border: 1px solid var(--md-window-line);
+  box-shadow: 0 24px 60px -18px rgb(0 0 0 / 0.35), 0 2px 6px rgb(0 0 0 / 0.08);
+}
+.magnify-dock__titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--md-window-line);
+}
+.magnify-dock__titlebar > button,
+.magnify-dock__titlebar > i {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #febc2e;
+}
+.magnify-dock__titlebar > i:last-of-type { background: #28c840; }
+.magnify-dock__titlebar > .is-close {
+  background: #ff5f57;
+  cursor: pointer;
+}
+.magnify-dock__titlebar > span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-muted);
+}
+.magnify-dock__window-body {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 4%, 22px);
+  padding: clamp(14px, 5%, 26px);
+}
+.magnify-dock__tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(44px, 18%, 76px);
+  aspect-ratio: 1;
+  border-radius: 22%;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 6px 16px -6px rgb(0 0 0 / 0.35);
+}
+.magnify-dock__tile svg { width: 54%; height: 54%; }
+.magnify-dock__lines {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+.magnify-dock__lines strong { font-size: 17px; }
+.magnify-dock__lines span {
+  font-size: 12px;
+  color: var(--md-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.magnify-dock__lines i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--md-skeleton);
+}
+
+/* 程序坞 */
+.magnify-dock__dock {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  align-self: center;
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  margin: 0 12px 10px;
+  border-radius: 18px;
+  background: var(--md-glass);
+  border: 1px solid var(--md-glass-line);
+  box-shadow: var(--md-glass-shadow);
+  touch-action: none;
+}
+.magnify-dock__item {
+  position: relative;
+  flex: none;
+}
+.magnify-dock__icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 23%;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -1px 0 rgb(0 0 0 / 0.08),
+    0 4px 10px -4px rgb(0 0 0 / 0.35);
+  -webkit-tap-highlight-color: transparent;
+}
+.magnify-dock__icon svg {
+  width: 52%;
+  height: 52%;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.15));
+}
+.magnify-dock__icon:focus-visible {
+  outline: 2px solid var(--md-fg);
+  outline-offset: 3px;
+}
+.magnify-dock__divider {
+  flex: none;
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 2px;
+  background: var(--md-glass-line);
+  opacity: 0.9;
+}
+.magnify-dock[data-theme="light"] .magnify-dock__divider { background: rgb(0 0 0 / 0.12); }
+
+.magnify-dock__label {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  padding: 4px 10px;
+  border-radius: 7px;
+  background: var(--md-label-bg);
+  color: var(--md-label-fg);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.18);
+}
+
+.magnify-dock__dot {
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--md-dot);
+}
+
+/* 桌面宽度的竖屏画布：菜单栏避开圆角 */
+@container md (width >= 900px) and (orientation: portrait) {
+  .magnify-dock__bar { height: 40px; align-items: flex-end; padding: 0 30px 6px; }
+  .magnify-dock__bar > span:nth-child(n + 3):not(.magnify-dock__bar-time) { display: none; }
+  .magnify-dock__dock { margin-bottom: 22px; }
+}
+
+/* ================= iPad / 手机（组件宽度 < 900）================= */
+
+/* 状态栏：左边时间，右边信号 / Wi-Fi / 电量（基础样式是 iPad，手机在下面的容器查询里加高） */
+.magnify-dock__status {
+  position: relative;
+  z-index: 4;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 26px;
+  padding: 0 22px;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.magnify-dock__status-time em {
+  margin-left: 8px;
+  font-style: normal;
+  font-weight: 500;
+}
+.magnify-dock__status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.magnify-dock__status svg {
+  display: block;
+  fill: currentColor;
+}
+.magnify-dock__status-pct {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 主屏：程序坞以外的 App，图标下面写名称；iPad 左上角放一个日历小组件 */
+.magnify-dock__home {
+  --md-icon: min(var(--md-base), calc((100cqw - 96px) / 6 - 34px));
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-content: start;
+  justify-items: center;
+  row-gap: 24px;
+  padding: 40px 48px 0;
+}
+.magnify-dock__app {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.magnify-dock__app-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.magnify-dock__widget {
+  grid-column: span 2;
+  grid-row: span 2;
+  justify-self: stretch;
+  align-self: stretch;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: var(--md-window);
+  border: 1px solid var(--md-window-line);
+  box-shadow: var(--md-glass-shadow);
+}
+.magnify-dock__widget span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f2453d;
+}
+.magnify-dock__widget strong {
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1;
+}
+.magnify-dock__widget i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--md-skeleton);
+}
+
+/* 触屏图标：外层定尺寸，按钮铺满（和桌面的 __item 一样，跳动只动按钮） */
+.magnify-dock__tap {
+  position: relative;
+  flex: none;
+  width: var(--md-icon);
+  height: var(--md-icon);
+}
+
+/* iPad 程序坞：悬浮在底部的大圆角毛玻璃条，左常用、竖线、右最近使用；图标太多时按宽度收小 */
+.magnify-dock__dock--ipad {
+  --md-icon: min(var(--md-base), calc((100cqw - 32px - 24px - 25px - (var(--md-n) - 1) * 12px) / var(--md-n)));
+  align-items: center;
+  gap: 12px;
+  margin: 0 16px 16px;
+  padding: 12px;
+  border-radius: 28px;
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  touch-action: manipulation;
+}
+.magnify-dock__dock--ipad .magnify-dock__divider {
+  margin: 4px 0;
+}
+
+/* 手机程序坞：4 个图标平分，毛玻璃底 */
+.magnify-dock__dock--phone {
+  --md-icon: min(var(--md-base), calc((100cqw - 48px) / 4 - 16px));
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  align-items: center;
+  margin: 0 10px 30px;
+  padding: 15px 12px;
+  border-radius: 34px;
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  touch-action: manipulation;
+}
+
+/* 打开的 App：iPad 是接近全屏的卡片（程序坞留在下面），手机是铺满的页面 */
+.magnify-dock__grabber {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding-top: 8px;
+}
+.magnify-dock__grabber i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--md-muted);
+  opacity: 0.6;
+}
+.magnify-dock__navbar {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--md-window-line);
+}
+.magnify-dock__navbar > span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 600;
+}
+.magnify-dock__close--round,
+.magnify-dock__close--back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.magnify-dock__close--round {
+  width: 44px;
+  color: var(--md-muted);
+}
+/* 看得见的是 30px 的圆，可点区域 44px */
+.magnify-dock__close--round svg {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  border-radius: 50%;
+  background: var(--md-skeleton);
+}
+.magnify-dock__close--back {
+  padding-right: 8px;
+  color: var(--md-tint);
+  font-size: 17px;
+}
+.magnify-dock__close--back svg {
+  width: 26px;
+  height: 26px;
+  margin-right: -2px;
+}
+.magnify-dock__rows {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 clamp(14px, 5%, 26px);
+}
+.magnify-dock__rows > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  border-top: 1px solid var(--md-window-line);
+}
+.magnify-dock__rows b {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--md-skeleton);
+}
+.magnify-dock__rows i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--md-skeleton);
+}
+
+/* 手机底部的主屏横条（打开 App 时可点，回到主屏） */
+.magnify-dock__homebar {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  place-items: end center;
+  width: 180px;
+  height: 30px;
+  padding: 0 0 8px;
+  border: 0;
+  background: transparent;
+  translate: -50% 0;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+button.magnify-dock__homebar {
+  height: 44px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.magnify-dock__homebar i {
+  width: 134px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--md-fg);
+  opacity: 0.85;
+}
+
+@container md (width < 900px) {
+  .magnify-dock__desk {
+    display: block;
+    place-items: normal;
+    padding: 0;
+  }
+  .magnify-dock__window {
+    position: absolute;
+    inset: 12px 20px 16px;
+    width: auto;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    border-radius: 22px;
+    /* 铺得大，不透明，免得主屏图标透出来 */
+    background: var(--md-page);
+  }
+}
+
+@container md (width < 600px) {
+  .magnify-dock__status {
+    height: 50px;
+    padding: 4px 30px 0 36px;
+    font-size: 16px;
+  }
+  .magnify-dock__home {
+    --md-icon: min(var(--md-base), calc((100cqw - 40px) / 4 - 26px));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: 22px;
+    padding: 20px 20px 0;
+  }
+  .magnify-dock__app-name {
+    font-size: 11px;
+  }
+  /* 手机的页面盖住整个组件（包括程序坞），所以桌面区域不做定位参照，窗口按组件根元素铺开 */
+  .magnify-dock__desk {
+    position: static;
+  }
+  .magnify-dock__window {
+    z-index: 3;
+    inset: 6px;
+    padding-top: 46px;
+    border-radius: 38px;
+  }
+}

@@ -1,0 +1,87 @@
+.liquid-toggle {
+  --lt-track: #e3e3e8;
+  --lt-knob: #fff;
+  --lt-muted: #8a8a8a;
+  --lt-ring: rgb(0 0 0 / 0.06);
+  width: 100%;
+  height: 100%;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.liquid-toggle[data-theme="dark"] {
+  --lt-track: #3a3a3e;
+  --lt-knob: #f7f7f7;
+  --lt-muted: #777;
+  --lt-ring: rgb(255 255 255 / 0.06);
+}
+
+.liquid-toggle__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+/* 详情大舞台里整体放大一些（尺寸参数仍是组件自身像素） */
+@container (min-width: 460px) and (min-height: 460px) {
+  .liquid-toggle__body { zoom: 1.25; }
+}
+@container (min-width: 620px) and (min-height: 600px) {
+  .liquid-toggle__body { zoom: 1.45; }
+}
+
+.liquid-toggle__track {
+  position: relative;
+  flex: none;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--lt-track);
+  box-shadow: inset 0 0 0 1px var(--lt-ring), inset 0 2px 4px rgb(0 0 0 / 0.06);
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.liquid-toggle__track:focus-visible {
+  outline: 2px solid var(--lt-color);
+  outline-offset: 3px;
+}
+
+.liquid-toggle__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 999px;
+  background: var(--lt-color);
+  pointer-events: none;
+}
+
+.liquid-toggle__knob {
+  position: absolute;
+  top: var(--lt-pad);
+  left: var(--lt-pad);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--lt-knob), color-mix(in srgb, var(--lt-knob) 92%, #000));
+  box-shadow:
+    0 0 0 0.5px rgb(0 0 0 / 0.04),
+    0 3px 8px rgb(0 0 0 / 0.16),
+    0 1px 1px rgb(0 0 0 / 0.08);
+  pointer-events: none;
+}
+
+.liquid-toggle__caption {
+  display: grid;
+  height: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--lt-muted);
+  overflow: hidden;
+}
+.liquid-toggle__caption > span {
+  grid-area: 1 / 1;
+}

@@ -1,0 +1,387 @@
+.swipe-deck {
+  --bg: #f4f4f5;
+  --fg: #111;
+  --muted: #8a8a8e;
+  --btn: #fff;
+  --btn-line: rgb(0 0 0 / 0.04);
+  --btn-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 20px rgb(0 0 0 / 0.08);
+  --card-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 14px 34px -10px rgb(0 0 0 / 0.28);
+  --like: #ff3b5c;
+  --nope: #1c1c1e;
+  width: 100%;
+  height: 100%;
+  /* 起名字：大屏时牌堆区自己也是尺寸容器，里面的子元素要明确按根元素查询；
+     尺寸容器同时是绝对定位的参照，量宽度的探针靠它 */
+  container: swipe-deck / size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 26px;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  /* clip 而不是 hidden：飞出去的卡不会把容器撑出可滚动区域 */
+  overflow: clip;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.swipe-deck[data-theme="dark"] {
+  --bg: #0c0c0d;
+  --fg: #f5f5f7;
+  --muted: #8a8a8e;
+  --btn: #1c1c1e;
+  --btn-line: rgb(255 255 255 / 0.08);
+  --btn-shadow: 0 8px 20px rgb(0 0 0 / 0.4);
+  --card-shadow: 0 0 0 1px rgb(255 255 255 / 0.06), 0 14px 34px -10px rgb(0 0 0 / 0.7);
+  --nope: #f5f5f7;
+}
+
+.swipe-deck__status {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 2px 8px 0 12px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.swipe-deck__head {
+  flex: none;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 14px;
+  box-sizing: border-box;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.swipe-deck__head small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 13px;
+  background: var(--btn);
+  box-shadow: inset 0 0 0 1px var(--btn-line);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.swipe-deck__head small svg { fill: var(--like); }
+
+/* 量宽度的探针：绝对定位、不占位，宽度等于根元素整宽（根元素是尺寸容器，也是它的定位参照） */
+.swipe-deck__probe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* 手机端这两层不占位，排版和没加之前一模一样；大屏才展开成两列 */
+.swipe-deck__body,
+.swipe-deck__main { display: contents; }
+
+.swipe-deck__stack {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 380px;
+}
+.swipe-deck__slot {
+  position: absolute;
+  inset: 0 0 var(--sd-peek, 42px);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+.swipe-deck__card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 26px;
+  box-shadow: var(--card-shadow);
+  color: #fff;
+  touch-action: none;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+.swipe-deck__card[data-top] {
+  pointer-events: auto;
+  cursor: grab;
+}
+.swipe-deck__card[data-top]:active { cursor: grabbing; }
+.swipe-deck__scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.swipe-deck__info {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  gap: 4px;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.18);
+}
+.swipe-deck__info strong { font-size: 30px; line-height: 1.15; letter-spacing: -0.01em; }
+.swipe-deck__info > span { font-size: 15px; opacity: 0.88; }
+.swipe-deck__chips {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.swipe-deck__chips span {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.22);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.swipe-deck__stamp {
+  position: absolute;
+  top: 26px;
+  padding: 3px 12px;
+  border: 3px solid currentColor;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: rgb(255 255 255 / 0.92);
+}
+.swipe-deck__stamp.is-like { left: 22px; color: #1fbf6b; rotate: -12deg; }
+.swipe-deck__stamp.is-nope { right: 22px; color: #ff3b5c; rotate: 12deg; }
+
+.swipe-deck__actions {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  padding-top: 14px;
+}
+.swipe-deck__actions button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--btn);
+  box-shadow: inset 0 0 0 1px var(--btn-line), var(--btn-shadow);
+  color: var(--nope);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.swipe-deck__actions button > i {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  background: var(--nope);
+  color: var(--bg);
+}
+.swipe-deck__actions button.is-like { color: var(--like); }
+.swipe-deck__actions button.is-like > i { background: var(--like); color: #fff; }
+.swipe-deck__actions path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.swipe-deck__actions .is-like path { fill: currentColor; stroke: none; }
+
+/* 矮容器（卡片尺寸）：收起标题，按钮变小 */
+/* 根元素自己的内边距按外层画布查询；子元素按根元素（swipe-deck）查询 */
+@container (max-height: 460px) {
+  .swipe-deck { padding: 14px 16px 14px; }
+}
+@container swipe-deck (max-height: 460px) {
+  .swipe-deck__head,
+  .swipe-deck__status { display: none; }
+  .swipe-deck__actions { gap: 20px; padding-top: 8px; }
+  .swipe-deck__actions button { width: 46px; height: 46px; }
+  .swipe-deck__info { left: 16px; right: 16px; bottom: 14px; }
+  .swipe-deck__info strong { font-size: 22px; }
+  .swipe-deck__info > span { font-size: 13px; }
+  .swipe-deck__chips { display: none; }
+  .swipe-deck__stamp { top: 14px; font-size: 18px; }
+  .swipe-deck__stamp.is-like { left: 14px; }
+  .swipe-deck__stamp.is-nope { right: 14px; }
+}
+
+/* 断点说明：容器查询量的是根元素的内容宽，根元素左右各有 20px 内边距，
+   所以「组件宽 ≥ 600 / ≥ 900」在这里写成内容宽 ≥ 560 / ≥ 860，和 JS（useEnd 量整宽）对齐 */
+
+/* ---------- iPad（组件宽 ≥ 600）：牌堆限高居中，按钮挪到两侧，右边一栏「已喜欢」 ---------- */
+@container swipe-deck (min-width: 560px) {
+  .swipe-deck__head {
+    max-width: none;
+    padding: 4px 4px 16px;
+  }
+
+  .swipe-deck__body {
+    flex: 1;
+    min-height: 0;
+    align-self: stretch;
+    display: flex;
+    gap: 20px;
+  }
+
+  /* 牌堆区：自己也是尺寸容器，牌堆按它的宽高取能放下的最大尺寸；
+     z-index 让飞向右栏的卡片从右栏上面经过 */
+  .swipe-deck__main {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+    container: swipe-deck-main / size;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    justify-content: center;
+    column-gap: 16px;
+  }
+  /* 按钮不再是底下一排：拆开放进三列网格，跳过在左、喜欢在右，和牌堆垂直居中 */
+  .swipe-deck__actions { display: contents; }
+  /* 牌堆底部有露出叠层的一条，按钮往上让出一半，和卡片本身垂直居中 */
+  .swipe-deck__actions button { grid-row: 1; grid-column: 1; margin-bottom: var(--sd-peek, 42px); }
+  .swipe-deck__actions button.is-like { grid-column: 3; }
+
+  /* 牌堆：保持手机上的卡片比例（含下面露出的叠层约 350 × 646），
+     宽度取「最大 380 / 两侧留出按钮后的宽 / 按高度换算的宽」里最小的 */
+  .swipe-deck__stack {
+    grid-row: 1;
+    grid-column: 2;
+    flex: none;
+    width: min(380px, 100cqw - 152px, 100cqh * 350 / 646);
+    max-width: none;
+    aspect-ratio: 350 / 646;
+  }
+
+  /* 右栏：已喜欢 */
+  .swipe-deck__liked {
+    flex: none;
+    width: clamp(200px, 28cqw, 280px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 22px;
+    background: var(--btn);
+    box-shadow: inset 0 0 0 1px var(--btn-line);
+    overflow: hidden;
+  }
+  .swipe-deck__liked-head {
+    flex: none;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 16px 18px 8px;
+    font-size: 15px;
+    font-weight: 650;
+  }
+  .swipe-deck__liked-head small {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .swipe-deck__liked-list {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: 0 8px 8px;
+    list-style: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .swipe-deck__liked-empty {
+    padding: 6px 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  /* 行在撑开高度时裁掉内容，缩略图位置固定在行顶，飞来的卡就对准它 */
+  .swipe-deck__liked-row { overflow: hidden; }
+  .swipe-deck__liked-inner {
+    display: grid;
+    grid-template-columns: 45px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+  }
+  .swipe-deck__liked-thumb {
+    position: relative;
+    width: 45px;
+    height: 60px;
+    border-radius: 10px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .swipe-deck__liked-thumb > span {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .swipe-deck__liked-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .swipe-deck__liked-text strong,
+  .swipe-deck__liked-text small {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .swipe-deck__liked-text strong { font-size: 15px; font-weight: 650; }
+  .swipe-deck__liked-text small { font-size: 12px; color: var(--muted); }
+}
+
+/* 有鼠标时按钮悬停加深一点阴影（触屏没有悬停，按下仍是缩小反馈） */
+@media (hover: hover) {
+  @container swipe-deck (min-width: 560px) {
+    .swipe-deck__actions button:hover {
+      box-shadow: inset 0 0 0 1px var(--btn-line), 0 2px 4px rgb(0 0 0 / 0.08), 0 12px 28px rgb(0 0 0 / 0.14);
+    }
+  }
+}
+
+/* ---------- 桌面（组件宽 ≥ 900）：同 iPad 的布局，没有手机状态栏，留白更多 ---------- */
+@container swipe-deck (min-width: 860px) {
+  .swipe-deck__status { display: none; }
+  .swipe-deck__head { padding: 26px 8px 20px; }
+  .swipe-deck__body { gap: 28px; }
+  .swipe-deck__main { column-gap: 28px; }
+  .swipe-deck__stack { width: min(400px, 100cqw - 176px, 100cqh * 350 / 646); }
+  .swipe-deck__liked-head { padding: 18px 20px 10px; }
+  .swipe-deck__liked-list { padding: 0 10px 10px; }
+}
+
+/* 窄 iPad（组件宽 600 出头，牌堆区不到 440）：按钮小一号（仍 ≥ 44）、间距收紧，把宽度让给卡片 */
+@container swipe-deck-main (max-width: 440px) {
+  .swipe-deck__main { column-gap: 10px; }
+  .swipe-deck__actions button { width: 52px; height: 52px; }
+  .swipe-deck__stack { width: min(380px, 100cqw - 124px, 100cqh * 350 / 646); }
+}

@@ -1,0 +1,124 @@
+.like-burst {
+  --fg: #111;
+  --muted: #9a9a9a;
+  --chip: #fff;
+  --chip-ring: rgb(0 0 0 / 0.04);
+  --like-2: color-mix(in oklab, var(--like) 55%, #fff);
+  width: 100%;
+  height: 100%;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  /* 根字号跟着画布走（cqmin 以外层画布为准），首页和详情里一样，只整体缩放 */
+  font-size: clamp(15px, 5.2cqmin, 24px);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.like-burst[data-theme="dark"] {
+  --fg: #f2f2f2;
+  --muted: #6c6c6c;
+  --chip: #232323;
+  --chip-ring: rgb(255 255 255 / 0.06);
+  --like-2: color-mix(in oklab, var(--like) 60%, #fff);
+}
+
+.like-burst__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.75em 1.35em 0.75em 0.95em;
+  border: 0;
+  border-radius: 999px;
+  background: var(--chip);
+  box-shadow:
+    0 0 0 1px var(--chip-ring),
+    0 1px 2px rgb(0 0 0 / 0.05),
+    0 8px 24px -6px rgb(0 0 0 / 0.1);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.like-burst[data-theme="dark"] .like-burst__btn {
+  box-shadow:
+    0 0 0 1px var(--chip-ring),
+    0 8px 24px -6px rgb(0 0 0 / 0.5);
+}
+.like-burst__btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--like);
+}
+
+.like-burst__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.25em;
+  height: 2.25em;
+}
+.like-burst__heart {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.like-burst__heart path {
+  fill: transparent;
+  stroke: var(--muted);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  transition: fill 0.22s ease, stroke 0.22s ease;
+}
+/* 点亮是瞬间的（配合弹起），熄灭才慢慢褪 */
+.like-burst[data-liked] .like-burst__heart path {
+  fill: var(--like);
+  stroke: var(--like);
+  transition: none;
+}
+
+.like-burst__ring {
+  position: absolute;
+  inset: -0.3em;
+  border-radius: 50%;
+  border: 0 solid var(--like);
+  pointer-events: none;
+}
+.like-burst__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  background: var(--like);
+  pointer-events: none;
+}
+.like-burst__dot[data-alt] {
+  background: var(--like-2);
+}
+
+.like-burst__count {
+  position: relative;
+  z-index: 1; /* 粒子从数字后面穿过 */
+  display: inline-flex;
+  min-width: 3ch;
+  font-size: 1.2em;
+  font-weight: 600;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.like-burst__slot {
+  position: relative;
+  display: inline-grid;
+  width: 1ch;
+  overflow: hidden;
+  /* 上下渐隐，数字滚进滚出不会切出硬边 */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  padding: 0.12em 0;
+  margin: -0.12em 0;
+}
+.like-burst__slot > span {
+  grid-area: 1 / 1;
+}
