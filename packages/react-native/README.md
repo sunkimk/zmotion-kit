@@ -14,6 +14,6 @@ import { LikeBurst } from "@zmotion/react-native";
 <LikeBurst color="#FF3B5C" particles={12} />
 ```
 
-目前有：LikeBurst、LiquidToggle、SwipeDeck，其余组件陆续补上。React 和 SwiftUI 版见 [zmotion-kit](https://github.com/sunkimk/zmotion-kit)。
+包含全部 12 个组件：LikeBurst、LiquidToggle、SwipeDeck、DotLoader、RollingCounter、MagneticButton、ImageCompare、SlideToConfirm、PullToRefresh、DynamicIsland、TabBar、MagnifyDock。部分配图用到的径向渐变需要 RN 0.80+，更早的版本会少掉这些层。React 和 SwiftUI 版见 [zmotion-kit](https://github.com/sunkimk/zmotion-kit)。
 
 MIT

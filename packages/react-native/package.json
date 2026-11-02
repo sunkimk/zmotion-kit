@@ -1,6 +1,6 @@
 {
   "name": "@zmotion/react-native",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Zmotion 交互动效的 React Native 版（Reanimated + Gesture Handler）",
   "license": "MIT",
   "repository": {
